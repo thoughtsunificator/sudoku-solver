@@ -1,6 +1,6 @@
 {
 	"name": "sudoku-solver",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A grid based approach to solve sudokus",
 	"main": "index.js",
 	"type": "module",
