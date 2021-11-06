@@ -1,3 +1,3 @@
-# bsq
+# sudoku-solver
 
-Find the biggest square on a given board
+A grid based approach to solve sudokus

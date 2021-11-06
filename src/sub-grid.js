@@ -1,6 +1,9 @@
 import Row from "./row.js"
 import Sudoku from "./sudoku.js"
 
+/**
+ * @global
+ */
 class SubGrid {
 
 	/**

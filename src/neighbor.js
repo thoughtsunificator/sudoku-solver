@@ -1,5 +1,12 @@
+/**
+ * @global
+ */
 class Neighbor {
 
+	/**
+	 * @param {Cell}             cell
+	 * @param {RelativePosition} relativePosition
+	 */
 	constructor(cell, relativePosition) {
 		this._cell = cell
 		this._relativePosition = relativePosition

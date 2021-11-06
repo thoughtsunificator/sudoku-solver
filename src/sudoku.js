@@ -1,15 +1,27 @@
 import Grid from "./grid.js"
 import SubGrid from "./sub-grid.js"
 
+/**
+ * @global
+ */
 class Sudoku {
 
+	/**
+	 * @type {Array<Number>}
+	 */
 	static DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+	/**
+	 * @param {Array<Array<Number>>} puzzle
+	 */
 	constructor(puzzle) {
 		this._puzzle = puzzle
 		this._grid = null
 	}
 
+	/**
+	 * @returns {Array<Array<Number>>}
+	 */
 	solve() {
 		this._grid = new Grid()
 		for(let x = 0; x < this.puzzle.length; x++) {
@@ -35,7 +47,7 @@ class Sudoku {
 
 	/**
 	 * @readonly
-	 * @type {type}
+	 * @type {Grid}
 	 */
 	get grid() {
 		return this._grid
@@ -43,7 +55,7 @@ class Sudoku {
 
 	/**
 	 * @readonly
-	 * @type {array}
+	 * @type {Array<Array<Number>>}
 	 */
 	get puzzle() {
 		return this._puzzle

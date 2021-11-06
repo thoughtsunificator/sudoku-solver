@@ -3,6 +3,9 @@ import Cell from "./cell.js"
 import Row from "./row.js"
 import SubGrid from "./sub-grid.js"
 
+/**
+ * @global
+ */
 class Grid {
 
 	constructor() {
@@ -87,7 +90,7 @@ class Grid {
 
 	/**
 	 * @readonly
-	 * @type {type}
+	 * @type {SubGrid[]}
 	 */
 	get subGrids() {
 		return this._subGrids

@@ -1,5 +1,15 @@
+/**
+ * @global
+ */
 class RelativePosition {
 
+	/**
+	 * @property AXIS {Axis}
+	 * @property AXIS.VERTICAL       {string}
+	 * @property AXIS.HORIZONTAL     {string}
+	 * @property AXIS.DIAGONAL_LEFT  {string}
+	 * @property AXIS.DIAGONAL_RIGHT {string}
+	 */
 	static AXIS = {
 		VERTICAL: "VERTICAL",
 		HORIZONTAL: "HORIZONTAL",
@@ -7,11 +17,20 @@ class RelativePosition {
 		DIAGONAL_RIGHT: "DIAGONAL_RIGHT",
 	}
 
+	/**
+	 * @property Direction {Direction}
+	 * @property Direction.FORWARD  {string}
+	 * @property Direction.BACKWARD {string}
+	 */
 	static DIRECTION = {
 		FORWARD: "FORWARD",
 		BACKWARD: "BACKWARD",
 	}
 
+	/**
+	 * @param {Axis}       axis
+	 * @param {Direction} direction
+	 */
 	constructor(axis, direction) {
 		this._axis = axis
 		this._direction = direction

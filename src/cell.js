@@ -1,8 +1,16 @@
 import RelativePosition from "./relative-position.js"
 import Sudoku from "./sudoku.js"
 
+/**
+ * @global
+ */
 class Cell {
 
+	/**
+	 * @param   {number} x
+	 * @param   {number} y
+	 * @param   {number} digit
+	 */
 	constructor(x, y, digit) {
 		this._x = x
 		this._y = y
@@ -127,7 +135,7 @@ class Cell {
 
 	/**
 	 * @readonly
-	 * @type {type}
+	 * @type {Row}
 	 */
 	get row() {
 		return this._row

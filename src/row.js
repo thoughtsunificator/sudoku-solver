@@ -1,5 +1,11 @@
+/**
+ * @global
+ */
 class Row {
 
+	/**
+	 * @param {number} x
+	 */
 	constructor(x) {
 		this._x = x
 		this._cells = {}
