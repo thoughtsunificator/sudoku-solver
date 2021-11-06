@@ -1,5 +1,5 @@
 {
-	"name": "sudoku-solver",
+	"name": "@thoughtsunificator/sudoku-solver",
 	"version": "1.0.4",
 	"description": "A grid based approach to solve sudokus",
 	"main": "index.js",
