@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>cell.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cell.html">Cell</a><ul class='methods'><li data-type='method'><a href="Cell.html#getRelativePosition">getRelativePosition</a></li><li data-type='method'><a href="Cell.html#getAvailableDigits">getAvailableDigits</a></li><li data-type='method'><a href="Cell.html#getUsedDigits">getUsedDigits</a></li><li data-type='method'><a href="Cell.html#getAxisCells">getAxisCells</a></li></ul></li><li><a href="Grid.html">Grid</a><ul class='methods'><li data-type='method'><a href="Grid.html#addCell">addCell</a></li><li data-type='method'><a href="Grid.html#getCell">getCell</a></li><li data-type='method'><a href="Grid.html#getCells">getCells</a></li><li data-type='method'><a href="Grid.html#getAvailableCells">getAvailableCells</a></li></ul></li><li><a href="Neighbor.html">Neighbor</a></li><li><a href="RelativePosition.html">RelativePosition</a></li><li><a href="Row.html">Row</a></li><li><a href="SubGrid.html">SubGrid</a><ul class='methods'><li data-type='method'><a href="SubGrid.html#addCell">addCell</a></li><li data-type='method'><a href="SubGrid.html#getAvailableDigits">getAvailableDigits</a></li><li data-type='method'><a href="SubGrid.html#hasMatchingDigits">hasMatchingDigits</a></li><li data-type='method'><a href="SubGrid.html#getUsedDigits">getUsedDigits</a></li><li data-type='method'><a href="SubGrid.html#getCell">getCell</a></li><li data-type='method'><a href="SubGrid.html#getCells">getCells</a></li><li data-type='method'><a href="SubGrid.html#getAvailableCells">getAvailableCells</a></li></ul></li><li><a href="Sudoku.html">Sudoku</a><ul class='methods'><li data-type='method'><a href="Sudoku.html#solve">solve</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">cell.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import RelativePosition from "./relative-position.js"
+import Sudoku from "./sudoku.js"
+
+/**
+ * @global
+ */
+class Cell {
+
+	/**
+	 * @param   {number} x
+	 * @param   {number} y
+	 * @param   {number} digit
+	 */
+	constructor(x, y, digit) {
+		this._x = x
+		this._y = y
+		this._digit = digit
+		this._row = null
+		this._subGrid = null
+		this._neighbors = []
+	}
+
+	/**
+	 * @param {Cell}
+	 * @returns {RelativePosition}
+	 */
+	getRelativePosition(cell) {
+		if (this.x === cell.x &amp;&amp; this.y - 1 === cell.y) {
+			return new RelativePosition(RelativePosition.AXIS.VERTICAL, RelativePosition.DIRECTION.BACKWARD)
+		}
+		if (this.x === cell.x &amp;&amp; this.y + 1 === cell.y) {
+			return new RelativePosition(RelativePosition.AXIS.VERTICAL, RelativePosition.DIRECTION.FORWARD)
+		}
+		if (this.x - 1 === cell.x &amp;&amp; this.y === cell.y ) {
+			return new RelativePosition(RelativePosition.AXIS.HORIZONTAL, RelativePosition.DIRECTION.BACKWARD)
+		}
+		if (this.x + 1 === cell.x &amp;&amp; this.y === cell.y ) {
+			return new RelativePosition(RelativePosition.AXIS.HORIZONTAL, RelativePosition.DIRECTION.FORWARD)
+		}
+		if (this.x - 1 === cell.x &amp;&amp; this.y - 1 === cell.y) {
+			return new RelativePosition(RelativePosition.AXIS.DIAGONAL_RIGHT, RelativePosition.DIRECTION.BACKWARD)
+		}
+		if (this.x + 1 === cell.x &amp;&amp; this.y + 1 === cell.y) {
+			return new RelativePosition(RelativePosition.AXIS.DIAGONAL_RIGHT, RelativePosition.DIRECTION.FORWARD)
+		}
+		if (this.x - 1 === cell.x &amp;&amp; this.y + 1 === cell.y) {
+			return new RelativePosition(RelativePosition.AXIS.DIAGONAL_LEFT, RelativePosition.DIRECTION.BACKWARD)
+		}
+		if (this.x + 1 === cell.x &amp;&amp; this.y - 1 === cell.y) {
+			return new RelativePosition(RelativePosition.AXIS.DIAGONAL_LEFT, RelativePosition.DIRECTION.FORWARD)
+		}
+		return null
+	}
+
+	/**
+	 * @returns {Array&lt;Number>}
+	 */
+	getAvailableDigits() {
+		const axisDigits = this.getUsedDigits()
+		const subGridDigits = this.subGrid.getUsedDigits()
+		const digits = axisDigits.concat(subGridDigits)
+		return Sudoku.DIGITS.filter(digit => !digits.includes(digit))
+	}
+
+	/**
+	 * @returns {Array&lt;Number>}
+	 */
+	getUsedDigits() {
+		const horizontalAxisCells = this.getAxisCells(RelativePosition.AXIS.HORIZONTAL)
+		const verticalAxisCells = this.getAxisCells(RelativePosition.AXIS.VERTICAL)
+		const cells = horizontalAxisCells.concat(verticalAxisCells)
+		return cells.map(cell => cell.digit)
+	}
+
+	/**
+	 * @param {Axis}    axis
+	 * @param {string} [path]
+	 * @param {string} [axisCells=[]]
+	 * @returns {Cell[]}
+	 * @example getAxisCells(RelativePosition.AXIS.VERTICAL)
+	 */
+	getAxisCells(axis, path = [], axisCells = []) {
+		if(axisCells.length === 0) {
+			axisCells.push(this)
+		}
+		path.push(this)
+		this.neighbors.filter(neighbor => neighbor.relativePosition.axis === axis &amp;&amp; path.includes(neighbor.cell) === false).forEach(neighbor => {
+			axisCells.push(neighbor.cell)
+			axisCells.concat(neighbor.cell.getAxisCells(axis, path, axisCells))
+		})
+		axisCells.sort((a, b) => {
+			if (a.y &lt; b.y) {
+				return -1
+			}
+			if (a.y > b.y) {
+				return 1
+			}
+			if (a.x &lt; b.x) {
+				return -1
+			}
+			if (a.x > b.x) {
+				return 1
+			}
+			return 0
+		})
+		return axisCells
+	}
+
+	/**
+	 * @readonly
+	 * @type {number}
+	 */
+	get x() {
+		return this._x
+	}
+
+	/**
+	 * @readonly
+	 * @type {number}
+	 */
+	get y() {
+		return this._y
+	}
+
+	/**
+	 * @type {number}
+	 */
+	get digit() {
+		return this._digit
+	}
+
+	set digit(digit) {
+		this._digit = digit
+	}
+
+	/**
+	 * @readonly
+	 * @type {Row}
+	 */
+	get row() {
+		return this._row
+	}
+
+	/**
+	 * @readonly
+	 * @type {Grid}
+	 */
+	get grid() {
+		return this._grid
+	}
+
+	/**
+	 * @readonly
+	 * @type {SubGrid}
+	 */
+	get subGrid() {
+		return this._subGrid
+	}
+
+	/**
+	 * @readonly
+	 * @type {Neighbor[]}
+	 */
+	get neighbors() {
+		return this._neighbors
+	}
+
+}
+
+export default Cell
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Nov 06 2021 15:12:45 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>
