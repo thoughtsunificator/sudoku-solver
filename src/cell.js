@@ -7,9 +7,9 @@ import Sudoku from "./sudoku.js"
 class Cell {
 
 	/**
-	 * @param   {number} x
-	 * @param   {number} y
-	 * @param   {number} digit
+	 * @param {number} x
+	 * @param {number} y
+	 * @param {number} digit
 	 */
 	constructor(x, y, digit) {
 		this._x = x
