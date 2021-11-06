@@ -1,6 +1,6 @@
 {
 	"name": "@thoughtsunificator/sudoku-solver",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "A grid based approach to solve sudokus",
 	"main": "index.js",
 	"type": "module",
